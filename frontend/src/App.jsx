@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { generatePlan, explainPlan } from './api/uiService.js';
+import { SchemaRenderer } from './renderer/SchemaRenderer.jsx'; // Import the renderer
 import './App.css';
 
 function App() {
@@ -72,8 +73,8 @@ function App() {
             <h2>Live Preview</h2>
             {plan ? (
               <div className="preview-box">
-                {/* SchemaRenderer will go here in next step */}
-                <pre>{JSON.stringify(plan, null, 2)}</pre>
+                {/* 🧩 Step F3 - Use SchemaRenderer */}
+                <SchemaRenderer schema={plan} />
               </div>
             ) : (
               <div className="empty-state">Enter a prompt to generate UI</div>

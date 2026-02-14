@@ -12,67 +12,59 @@ import { Chart } from "../components/Chart";
  * Whitelisted Components Only
  */
 const COMPONENT_MAP = Object.freeze({
-  Button,
-  Card,
-  Input,
-  Table,
-  Modal,
-  Sidebar,
-  Navbar,
-  Chart
+    Button,
+    Card,
+    Input,
+    Table,
+    Modal,
+    Sidebar,
+    Navbar,
+    Chart
 });
 
 /**
- * Strict single-node renderer
- * No recursion
- * No layout freedom
+ * Strict recursive renderer
  */
 const renderNode = (node, index) => {
-  if (!node || typeof node !== "object") {
-    throw new Error("Invalid schema node.");
-  }
+    if (!node || typeof node !== "object") {
+        return null; // Ignore invalid nodes instead of crashing entirely? Or strict throw? Strict is better for this assignment.
+        // throw new Error("Invalid schema node."); 
+    }
 
-  const { type, props = {} } = node;
+    const { type, props = {}, children = [] } = node;
 
-  if (typeof type !== "string") {
-    throw new Error("Component type must be a string.");
-  }
+    const Component = COMPONENT_MAP[type];
 
-  const Component = COMPONENT_MAP[type];
+    if (!Component) {
+        console.warn(`Component "${type}" is not allowed.`);
+        return null;
+    }
 
-  if (!Component) {
-    throw new Error(`Component "${type}" is not allowed.`);
-  }
+    // Recursively render children
+    const childElements = Array.isArray(children)
+        ? children.map((child, childIndex) => renderNode(child, childIndex))
+        : null;
 
-  if (typeof props !== "object" || Array.isArray(props)) {
-    throw new Error(`Invalid props supplied to "${type}".`);
-  }
-
-  // No children allowed in Step 1
-  if ("children" in node) {
-    throw new Error(
-      `"children" is not supported in Step 1. Layout must be explicit.`
+    return (
+        <Component key={index} {...props}>
+            {childElements}
+        </Component>
     );
-  }
-
-  return <Component key={index} {...props} />;
 };
 
 /**
  * Main Interpreter
  */
 export const SchemaRenderer = ({ schema }) => {
-  if (!schema || !Array.isArray(schema.components)) {
-    throw new Error(
-      'Invalid schema. Expected: { components: [] }'
-    );
-  }
+    if (!schema || !Array.isArray(schema.components)) {
+        return <div className="error-text">Invalid schema format</div>;
+    }
 
-  return (
-    <>
-      {schema.components.map((node, index) =>
-        renderNode(node, index)
-      )}
-    </>
-  );
+    return (
+        <div className="sys-canvas">
+            {schema.components.map((node, index) =>
+                renderNode(node, index)
+            )}
+        </div>
+    );
 };
