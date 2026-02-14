@@ -4,7 +4,9 @@
  * Connects the React Frontend to the Backend Agents.
  */
 
-const API_BASE = "http://localhost:3000";
+// Use environment variable from Vite if set, otherwise default to Render (Prod) or Local (Dev)
+// NOTE: For local dev, you might want to use http://localhost:5000 if backend runs there
+const API_BASE = import.meta.env.VITE_API_URL || "https://determinui-1.onrender.com";
 
 export async function generatePlan(intent) {
     const res = await fetch(`${API_BASE}/plan`, {
