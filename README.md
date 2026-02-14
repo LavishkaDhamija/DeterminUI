@@ -1,196 +1,256 @@
-DeterminUI — Deterministic AI-Driven UI Generation
-Overview
+# DeterminUI — Deterministic AI-Driven UI Generation
 
-DeterminUI is an experimental system that explores how large language models can assist in user interface creation without being allowed to directly generate code.
-Instead of letting AI build UI components freely, DeterminUI separates planning from execution. The model produces a structured description of an interface, and the application deterministically converts that description into React components using strict validation rules.
+DeterminUI explores a different way of combining AI with software systems.
+Instead of allowing a language model to directly generate UI code, the system restricts the model to planning structure while all execution is handled by deterministic, verifiable code.
 
-This approach ensures that AI contributes ideas while the system retains full control over what is rendered.
+The goal is to make AI-assisted UI generation reproducible, auditable, and safe to integrate into real applications.
 
-Problem Statement
+---
 
-Many AI-based UI generators suffer from several issues:
+## Overview
 
-Outputs are non-deterministic and difficult to reproduce
+Many AI-driven UI generators produce outputs that are:
 
-Generated code often contains invalid properties or unsupported structures
+* Non-deterministic
+* Difficult to validate
+* Hard to regenerate reliably
+* Prone to hallucinated styles, props, or layouts
 
-Validation and auditing are difficult
+DeterminUI addresses this by separating responsibilities:
 
-Regeneration may produce different results for the same input
+```
+AI is allowed to plan.
+AI is not allowed to build.
+```
 
-Direct AI code generation is unsafe for production environments
+The system divides work into:
 
-DeterminUI addresses these issues by treating AI output as untrusted input that must pass through a controlled pipeline before it can affect the UI.
+* Planning (handled by the LLM)
+* Execution (handled by deterministic runtime code)
 
-Core Concept
+This ensures:
 
-DeterminUI follows a strict rule:
+* Reproducibility
+* Validation before rendering
+* Explainability of AI decisions
+* Safe regeneration and versioning
 
-The AI is allowed to propose structure, but it is never allowed to implement it.
+---
 
-The system divides responsibilities into two layers:
+## Architecture
 
-The LLM generates a structured UI plan (intent).
+DeterminUI follows a structured pipeline:
 
-The application validates and renders that plan using predefined components.
-
-System Architecture
-
-DeterminUI uses a Planner → Validator → Generator pipeline.
-
+```
 User Intent
    ↓
-Planner Agent (LLM produces JSON only)
-   ↓
-Validation Layer (enforces schema and constraints)
-   ↓
-Deterministic Generator (pure transformation)
-   ↓
-React Component Output
-   ↓
-Rendered Interface
-
-
-The same input always produces the same output because no randomness exists after the planning step.
-
-Planner Agent
-
-The Planner Agent translates natural language intent into a JSON schema describing the interface.
-It operates under strict constraints:
-
-It may only reference an approved list of components:
-
-Button
-
-Card
-
-Input
-
-Table
-
-Modal
-
-Sidebar
-
-Navbar
-
-Chart
-
-It must return JSON only.
-
-It cannot generate JSX or styling instructions.
-
-It must follow a predefined schema.
-
-This ensures the model provides structured intent rather than executable code.
-
+Planner Agent (LLM)
+   ↓  Structured JSON Plan (no JSX)
 Validation Layer
-
-The validation stage treats the AI output as untrusted data and enforces deterministic rules:
-
-Unknown components are rejected.
-
-Invalid or extra props are rejected.
-
-Required props must be present.
-
-Component nesting must follow allowed patterns.
-
-This transforms AI output into a constrained domain-specific language for UI definition.
-
+   ↓  Approved Component Graph
 Deterministic Generator
+   ↓  React Code (Pure Function)
+Renderer
+   ↓
+Live Preview
+```
 
-The generator is a pure function that converts validated JSON into React code.
+**Key Principle:**
+The LLM never generates UI code. It only produces structured intent.
 
-Characteristics:
+---
 
-No AI involvement
+## Planner Agent
 
-No randomness
+The planner interprets natural language requests and converts them into a constrained UI schema.
 
-No external API calls
+### Allowed Components
 
-Identical input always produces identical JSX output
+```
+Button, Card, Input, Table, Modal, Sidebar, Navbar, Chart
+```
 
-This guarantees reproducibility and allows regeneration without drift.
+### Rules Enforced in the Prompt
 
-Component System
+* No JSX generation
+* No styling decisions
+* JSON-only output
+* Must follow a strict schema
 
-The frontend is built on a fixed component registry.
-Each component exposes a clearly defined contract, for example:
+Example schema:
 
-Card → accepts title
+```
+{
+ "layout": string,
+ "components": [
+   { "type": string, "props": object, "children": [] }
+ ]
+}
+```
 
-Button → accepts label, variant
+This ensures the AI produces structure, not implementation.
 
-Input → accepts label, value, placeholder
+---
 
-No additional props are permitted.
-This prevents uncontrolled UI generation.
+## Explainability Layer
 
-Frontend Workspace
+After planning, a secondary AI call can explain the reasoning behind the chosen layout.
+This supports transparency, debugging, and auditability of AI-driven decisions.
 
-The interface provides an environment similar to modern AI-assisted development tools:
+---
 
-A panel for entering natural language intent
+## Fixed Component System
 
-A generated code view
+The frontend uses a closed component library.
+AI cannot introduce new components or alter styling.
 
-A live preview rendered from deterministic output
+Each component exposes a strict contract:
 
-An explanation view describing planning decisions
+```
+Card   → { title }
+Button → { label, variant }
+Input  → { label, value, placeholder }
+```
 
-Why This Approach Matters
+Unknown props are rejected.
 
-DeterminUI demonstrates an alternative model for integrating AI into production systems.
+---
 
-Traditional Generative Approach	DeterminUI Approach
-AI writes executable code	AI produces plans
-Hard to validate	Fully enforceable
-Outputs vary between runs	Reproducible
-Risky in production	Controlled pipeline
+## Validation Layer
 
-This model treats the LLM more like a compiler front-end that suggests structure rather than an autonomous developer.
+Before anything is rendered, the plan is validated:
 
-Current Limitations
+* Unknown components are rejected
+* Invalid props are rejected
+* Missing required props are rejected
+* Invalid nesting is rejected
 
-The system is intentionally constrained:
+This converts AI output into a strict UI DSL (Domain Specific Language).
 
-Only whitelisted components may be used
+---
 
-Styling is static and not AI-driven
+## Deterministic Generator
 
-Layout capabilities are basic
+The generator is a pure transformation layer:
 
-Schema expansion requires manual updates
+```
+Same Input Plan
+        =
+Same Output Code
+        =
+Guaranteed Reproducibility
+```
 
-Version tracking and diffing are not yet implemented
+There is:
 
-These limitations are deliberate to maintain determinism.
+* No randomness
+* No second AI call
+* No regeneration drift
 
-Potential Future Work
+The generator simply converts validated JSON into JSX using fixed rules.
 
-With further development, the system could support:
+---
 
-Versioned UI plans with rollback capability
+## Frontend Experience
 
-Incremental plan editing instead of full regeneration
+The interface presents a structured workspace:
 
-Richer layout primitives such as Grid or Stack
+```
+┌──────────────┬──────────────────────┬────────────────────┐
+│ Intent Panel │ Generated Code       │ Live Preview       │
+└──────────────┴──────────────────────┴────────────────────┘
+```
 
-Design token selection from approved sets
+Features include:
 
-Visual debugging of the component tree
+* Natural language UI requests ✏️
+* Deterministic code output
+* Live preview of generated UI
+* Visibility into AI reasoning
+* Regenerable, stable results
 
-Technology Stack
-Layer	Technology
-Frontend	React.js
-Backend	Node.js (Express)
-AI	Local LLM via Ollama API
-Validation	Custom rule engine
-Rendering	Deterministic JSX builder
-Database	MongoDB (planned)
-Summary
+---
 
-DeterminUI is not a general-purpose UI generator.
-It is a controlled framework for studying how AI can participate in interface design while keeping execution fully deterministic, auditable, and reproducible.
+## Why This Approach Matters
+
+DeterminUI models AI more like a compiler front-end than an autonomous developer.
+
+| Traditional GenAI | DeterminUI Model  |
+| ----------------- | ----------------- |
+| LLM writes code   | LLM writes plans  |
+| Hard to validate  | Fully enforceable |
+| Unstable outputs  | Reproducible      |
+| Unsafe for prod   | Safe-by-design    |
+
+This approach is closer to how AI must behave in enterprise environments.
+
+---
+
+## Current Limitations
+
+These constraints are intentional:
+
+* Only whitelisted components are allowed
+* Styling is static
+* Layout intelligence is limited
+* No semantic understanding of backend data
+* Schema must be manually extended
+* Version diffing is not yet implemented
+
+These trade flexibility for determinism.
+
+---
+
+## Possible Future Extensions
+
+If expanded further, the system could include:
+
+1. Versioning Engine
+
+   ```
+   Intent → Plan → Snapshot → Diff → Rollback
+   ```
+
+2. Iterative Editing Agent
+   Modify existing plans without full regeneration.
+
+3. Structural Layout Primitives
+
+   ```
+   Grid, Stack, Container
+   ```
+
+4. Design Token Selection
+   AI chooses from approved spacing, typography, and color sets.
+
+5. Visual Plan Debugger
+   Graph-based view of the component tree.
+
+---
+
+## Tech Stack
+
+| Layer      | Technology                  |
+| ---------- | --------------------------- |
+| Frontend   | React.js                    |
+| Backend    | Node.js (Express)           |
+| Database   | MongoDB (planned)           |
+| AI         | Local / API-based LLM       |
+| Validation | Custom rule engine          |
+| Rendering  | Deterministic JSX generator |
+
+---
+
+## Summary
+
+DeterminUI is not a UI generator in the conventional sense.
+It is a controlled orchestration model showing how LLMs can be integrated into production systems without sacrificing determinism.
+
+AI suggests structure.
+The system enforces correctness.
+
+---
+
+**Author:** Lavis
+**Project:** DeterminUI
+**Focus:** Deterministic Human–AI Collaboration
