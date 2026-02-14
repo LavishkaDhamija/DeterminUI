@@ -36,7 +36,6 @@ body {
     border-right: 1px solid var(--border);
     background: var(--panel-bg);
     overflow: hidden;
-    /* Prevent panel itself from scrolling, let children scroll */
 }
 
 .left-panel {
@@ -63,7 +62,6 @@ body {
     background: rgba(17, 24, 39, 0.8);
     backdrop-filter: blur(8px);
     flex-shrink: 0;
-    /* Prevent header shrink */
 }
 
 .panel-header h2 {
@@ -122,26 +120,26 @@ body {
     box-shadow: 0 -2px 10px rgba(56, 189, 248, 0.4);
 }
 
-/* 🔹 Chat / Input Area - FIXED SCROLLING */
+/* 🔹 Chat / Input Area - FIXED LAYOUT */
 .chat-interface {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 24px;
-    gap: 24px;
-    overflow-y: auto;
-    /* Enable scrolling for the whole chat interface */
+    padding: 0;
+    /* Remove global padding to control scroll better */
     height: 100%;
+    overflow: hidden;
+    /* Container doesn't scroll, inner parts do */
 }
 
+/* Explanation / Chat History - SCROLLABLE */
 .chat-history {
     flex: 1;
-    /* Pushes input area down if history is short */
+    padding: 24px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    min-height: 0;
-    /* Important for flex child scrolling */
 }
 
 .system-msg {
@@ -152,22 +150,21 @@ body {
     opacity: 0.7;
 }
 
-/* Input Box */
+/* Input Box - FIXED AT BOTTOM */
 .input-area {
     flex-shrink: 0;
-    /* Don't shrink input area */
     display: flex;
     flex-direction: column;
     gap: 12px;
     background: #1f2937;
     padding: 16px;
+    margin: 24px;
+    /* Margin to separate from edge */
     border-radius: 12px;
     border: 1px solid var(--border);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s;
-    position: sticky;
-    /* Optional: Keep input visible */
-    bottom: 0px;
+    z-index: 20;
 }
 
 .input-area:focus-within {
@@ -215,8 +212,6 @@ button:disabled {
     gap: 12px;
     align-items: flex-start;
     max-width: 100%;
-    margin-bottom: 20px;
-    /* Space after explanation */
 }
 
 .msg-avatar {
@@ -242,7 +237,6 @@ button:disabled {
     line-height: 1.6;
     color: #e2e8f0;
     word-wrap: break-word;
-    /* Ensure valid text wrapping */
 }
 
 .msg-bubble strong {
@@ -254,18 +248,17 @@ button:disabled {
     letter-spacing: 0.5px;
 }
 
-/* 🔹 Stage / Content Area */
+/* 🔹 Stage */
 .stage {
     flex: 1;
     position: relative;
     overflow: hidden;
-    /* Stage shouldn't scroll, canvas should */
     background: #0b1120;
     display: flex;
     flex-direction: column;
 }
 
-/* Preview Canvas - FIXED CENTERING & SIZE */
+/* Preview Canvas */
 .preview-canvas {
     height: 100%;
     width: 100%;
@@ -279,7 +272,6 @@ button:disabled {
     background-position: 0 0, 12px 12px;
     padding: 40px;
     overflow: auto;
-    /* Enable scrolling if content is huge */
     box-sizing: border-box;
 }
 
@@ -318,12 +310,10 @@ button:disabled {
     box-sizing: border-box;
 }
 
-/* Code Editor container fix */
 .code-editor {
     height: 100%;
     width: 100%;
     overflow: hidden;
-    /* Monaco handles its own scroll */
 }
 
 /* Scrollbar */
