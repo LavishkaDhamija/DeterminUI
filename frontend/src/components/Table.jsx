@@ -1,3 +1,7 @@
+// 🔒 FROZEN API: This component is part of the deterministic registry.
+// NO changes allowed. NO new props. NO style overrides.
+// Schema: Table { columns: string[], rows: any[][] }
+
 import React from 'react';
 
 export const Table = ({ columns = [], rows = [] }) => {

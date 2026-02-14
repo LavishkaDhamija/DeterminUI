@@ -1,3 +1,7 @@
+// 🔒 FROZEN API: This component is part of the deterministic registry.
+// NO changes allowed. NO new props. NO style overrides.
+// Schema: Chart { title: string, type: 'bar' | 'line' | 'pie' | 'doughnut', data: number[] }
+
 import React from 'react';
 
 export const Chart = ({ title, type = 'bar', data = [] }) => {

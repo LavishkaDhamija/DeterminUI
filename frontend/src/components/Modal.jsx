@@ -1,3 +1,7 @@
+// 🔒 FROZEN API: This component is part of the deterministic registry.
+// NO changes allowed. NO new props. NO style overrides.
+// Schema: Modal { isOpen: boolean, title: string, children: ReactNode }
+
 import React from 'react';
 
 export const Modal = ({ isOpen, title, children }) => {

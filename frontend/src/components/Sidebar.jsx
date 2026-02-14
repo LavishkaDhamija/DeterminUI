@@ -1,3 +1,7 @@
+// 🔒 FROZEN API: This component is part of the deterministic registry.
+// NO changes allowed. NO new props. NO style overrides.
+// Schema: Sidebar { items: string[] }
+
 import React from 'react';
 
 export const Sidebar = ({ items = [] }) => {
