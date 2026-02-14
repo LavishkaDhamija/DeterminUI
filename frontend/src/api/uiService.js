@@ -20,6 +20,20 @@ export async function generatePlan(intent) {
     return res.json();
 }
 
+// 🧩 F3 - Fetch Generated Code
+export async function generateCode(plan) {
+    const res = await fetch(`${API_BASE}/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(plan)
+    });
+
+    if (!res.ok) {
+        throw new Error("Code generation failed");
+    }
+    return res.text(); // Returns raw string, not JSON
+}
+
 export async function explainPlan(intent, plan) {
     const res = await fetch(`${API_BASE}/explain`, {
         method: "POST",
