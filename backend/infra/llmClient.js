@@ -5,18 +5,28 @@
  * Ensures clean separation between AI provider and application logic.
  */
 
+// Deployment Config
+const LLM_API_URL = process.env.LLM_API_URL || "http://localhost:11434/api/generate";
+const LLM_API_KEY = process.env.LLM_API_KEY || ""; // Only if using hosted (e.g. OpenAI/Groq)
+const LLM_MODEL = process.env.LLM_MODEL || "mistral";
+
 export async function callLLM({ systemPrompt, userPrompt, expectJson = true }) {
     try {
-        const res = await fetch("http://localhost:11434/api/generate", {
+        const headers = { "Content-Type": "application/json" };
+        if (LLM_API_KEY) {
+            headers["Authorization"] = `Bearer ${LLM_API_KEY}`;
+        }
+
+        const res = await fetch(LLM_API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: headers,
             body: JSON.stringify({
-                model: "mistral",
+                model: LLM_MODEL,
                 prompt: `${systemPrompt}\n\nUser Request:\n${userPrompt}`,
                 stream: false,
                 options: {
                     temperature: 0, // Determinism: 0 temp
-                    num_ctx: 4096   // Context window size (optional but good for larger plans)
+                    num_ctx: 4096   // Context window size
                 }
             })
         });
