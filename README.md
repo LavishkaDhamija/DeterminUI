@@ -251,6 +251,6 @@ The system enforces correctness.
 
 ---
 
-**Author:** Lavis
+**Author:** Lavishka Dhamija
 **Project:** DeterminUI
 **Focus:** Deterministic Human–AI Collaboration
