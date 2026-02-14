@@ -14,6 +14,9 @@ function App() {
 
   const [error, setError] = useState(null);
 
+  // Toggle debug view
+  const [showDebug, setShowDebug] = useState(false);
+
   const handleGenerate = async () => {
     if (!intent.trim()) return;
 
@@ -87,13 +90,32 @@ function App() {
 
           {/* Renderer Placeholder */}
           <div className="renderer-pane">
-            <h2>Live Preview</h2>
+            <div className="pane-header">
+              <h2>Live Preview</h2>
+              {plan && (
+                <button
+                  className="debug-toggle"
+                  onClick={() => setShowDebug(!showDebug)}
+                >
+                  {showDebug ? 'Hide Schema' : 'Show Schema'}
+                </button>
+              )}
+            </div>
+
             {plan ? (
               <div className="preview-box">
                 <SchemaRenderer schema={plan} />
               </div>
             ) : (
               <div className="empty-state">Enter a prompt to generate UI</div>
+            )}
+
+            {/* F6 - Debug Section */}
+            {showDebug && plan && (
+              <div className="debug-schema">
+                <h3>Raw Deterministic Schema</h3>
+                <pre>{JSON.stringify(plan, null, 2)}</pre>
+              </div>
             )}
           </div>
 
