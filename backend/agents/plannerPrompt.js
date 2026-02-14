@@ -36,6 +36,12 @@ STRICT RULES:
 - Return ONLY valid JSON.
 - children must be an array (can be empty).
 
+CRITICAL FORMATTING INSTRUCTIONS:
+- Ensure all property names are double-quoted.
+- Ensure there are NO trailing commas after the last item in an array or object.
+- Close all brackets and braces properly.
+- Return ONLY the JSON object, do not wrap it in markdown block quotes like \`\`\`json.
+
 Schema:
 {
  "layout": string,
