@@ -5,7 +5,7 @@
  * Ensures clean separation between AI provider and application logic.
  */
 
-export async function callLLM({ systemPrompt, userPrompt }) {
+export async function callLLM({ systemPrompt, userPrompt, expectJson = true }) {
     try {
         const res = await fetch("http://localhost:11434/api/generate", {
             method: "POST",
@@ -30,6 +30,11 @@ export async function callLLM({ systemPrompt, userPrompt }) {
         // Safety check if response is missing
         if (!data || !data.response) {
             throw new Error("No response received from LLM");
+        }
+
+        // 🧩 Fix: Support non-JSON responses for Explainer
+        if (!expectJson) {
+            return data.response.trim();
         }
 
         return extractJSON(data.response);

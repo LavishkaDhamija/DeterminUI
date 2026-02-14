@@ -36,28 +36,17 @@ UI Plan:
 ${JSON.stringify(plan, null, 2)}
 `;
 
-    // We reuse the callLLM client which expects JSON back usually, 
-    // BUT for explanation we might want text. 
-    // However, our current llmClient.js implementation is STRICT about JSON.
-    // So we must ask the LLM to return JSON with an "explanation" field.
-
-    // To fit the existing infrastructure without rewriting llmClient:
-    const jsonEnforcedPrompt = SYSTEM_PROMPT + `
-    
-    Format your response as valid JSON:
-    {
-      "explanation": "Your detailed explanation here..."
-    }
-    `;
-
     try {
-        const response = await callLLM({
-            systemPrompt: jsonEnforcedPrompt,
-            userPrompt: userPrompt
+        // 🧩 Fix: Call LLM with expectJson: false because explanation is natural text
+        const textResponse = await callLLM({
+            systemPrompt: SYSTEM_PROMPT, // No JSON enforcement prompt needed
+            userPrompt: userPrompt,
+            expectJson: false
         });
 
-        const parsed = JSON.parse(response);
-        return parsed.explanation || "No explanation provided.";
+        // The response is already the raw text explanation
+        return textResponse || "No explanation provided.";
+
     } catch (error) {
         console.error("Explainer Agent failed:", error);
         return "Explanation could not be generated.";
