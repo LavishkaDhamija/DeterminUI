@@ -1,0 +1,242 @@
+/* General Resets */
+.sys-button,
+.sys-input,
+.sys-card,
+.sys-table,
+.sys-modal,
+.sys-sidebar,
+.sys-navbar,
+.sys-chart {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Button */
+.sys-button {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 0.2s;
+}
+
+.sys-button-primary {
+    background-color: #0066ff;
+    color: white;
+}
+
+.sys-button-primary:hover {
+    background-color: #0052cc;
+}
+
+.sys-button-secondary {
+    background-color: #f0f2f5;
+    color: #172b4d;
+    border: 1px solid #dcdfe4;
+}
+
+.sys-button-secondary:hover {
+    background-color: #e3e5e8;
+}
+
+/* Card */
+.sys-card {
+    background: white;
+    border: 1px solid #dfe1e6;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.sys-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #dfe1e6;
+    font-weight: 600;
+    font-size: 16px;
+    color: #172b4d;
+    background-color: #f9fafb;
+}
+
+.sys-card-body {
+    padding: 16px;
+    color: #42526e;
+}
+
+/* Input */
+.sys-input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.sys-input-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #42526e;
+    margin-bottom: 4px;
+}
+
+.sys-input {
+    padding: 8px 12px;
+    border: 1px solid #dfe1e6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #172b4d;
+    background-color: #ffffff;
+}
+
+.sys-input:focus {
+    outline: none;
+    border-color: #0066ff;
+    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+}
+
+/* Table */
+.sys-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #dfe1e6;
+    border-radius: 8px;
+}
+
+.sys-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: left;
+}
+
+.sys-table-head {
+    background-color: #f4f5f7;
+}
+
+.sys-table-header-cell {
+    padding: 12px 16px;
+    color: #5e6c84;
+    font-weight: 600;
+    border-bottom: 1px solid #dfe1e6;
+}
+
+.sys-table-row {
+    border-bottom: 1px solid #dfe1e6;
+}
+
+.sys-table-row:last-child {
+    border-bottom: none;
+}
+
+.sys-table-cell {
+    padding: 12px 16px;
+    color: #172b4d;
+}
+
+/* Navbar */
+.sys-navbar {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 56px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dfe1e6;
+    width: 100%;
+}
+
+.sys-navbar-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0066ff;
+}
+
+/* Sidebar */
+.sys-sidebar {
+    width: 240px;
+    background-color: #f4f5f7;
+    border-right: 1px solid #dfe1e6;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sys-sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sys-sidebar-item {
+    padding: 12px 24px;
+    color: #42526e;
+    font-size: 14px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+}
+
+.sys-sidebar-item:hover {
+    background-color: #e3e5e8;
+}
+
+/* Chart Placeholder */
+.sys-chart {
+    background: white;
+    border: 1px solid #dfe1e6;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.sys-chart-title {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #172b4d;
+}
+
+.sys-chart-content {
+    height: 150px;
+    background-color: #f4f5f7;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.sys-chart-item {
+    width: 30px;
+    background-color: #0066ff;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    min-height: 20px;
+}
+
+/* Modal */
+.sys-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #dfe1e6;
+    z-index: 1000;
+}
+
+.sys-modal-header {
+    padding: 16px;
+    border-bottom: 1px solid #dfe1e6;
+    font-weight: 600;
+    font-size: 18px;
+    color: #172b4d;
+}
+
+.sys-modal-body {
+    padding: 24px;
+    color: #42526e;
+}
